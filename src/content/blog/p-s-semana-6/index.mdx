@@ -1,0 +1,491 @@
+---
+title: 'Semana 6 - Programación Segura'
+description: 'PRÁCTICAS DE PROGRAMACIÓN SEGURA PARA
+DESARROLLO - OWASP'
+date: 2024-11-27
+tags: ['Programación segura', 'tecnologia']
+image: './ps.png'
+authors: ['enscribe']
+---
+
+PRÁCTICAS DE PROGRAMACIÓN SEGURA PARA
+DESARROLLO - OWASP
+
+# PRINCIPIOS DE CODIFICACIÓN SEGURA
+
+Se puede decir que codificación segura, es cuando la programación o el desarrollo de un sistema
+tienen lineamientos, certificaciones y estándares de seguridad 
+
+
+## A1:2017. Inyección
+
+Las fallas de inyección ocurren cuando se logra enviar datos que no son confiables a un intérprete,
+como parte de un comando, puede ser SQL, NoSQL, OS o LDAP, se pretende engañar al interprete
+para que ejecute comandos involuntarios o simplemente acceda a datos sin autorización.
+
+La inyección SQL es de las vulnerabilidades más comunes y antiguas hoy en día, y a pesar de ello
+seguimos observando cómo causan estragos, sobre todo en los PC’s y servidores que se encuentran
+menos protegidos
+
+### Ejemplifiquemos un poco como se realiza está inyección de datos:
+
+Supongamos que se rellena un formulario cliqueando “Login”, “Acceder”, “Entrar” o similar, esto
+se envía a una sentencia SQL que será ejecutada contra la base de datos de la aplicación a la
+cual se quiere tener acceso, esta serie de comandos pueden ser similar a la siguiente:
+
+~~~sql
+$sql = SELECT * FROM usuarios WHERE usuario = ‘$usuario’ and password = ‘$pass’;
+~~~
+
+Sabiendo que "$usuario" y "$pass" son aquellas variables que contienen los valores introducidos
+por el usuario en cada uno de esos campos, en muchas ocasiones el usuario tiene datos como
+"mary" y "12345", respectivamente, por lo que la consulta a ejecutar quedaría de la siguiente
+forma, 
+
+~~~sql
+$sql = SELECT * FROM usuarios WHERE usuario = ‘mary’ and password = ‘12345’;
+~~~
+
+Pero, ¿qué ocurriría si un atacante en el campo “password” agregara “’ OR ‘1’ = ‘1”? Es decir:
+
+~~~sql
+password = ‘12345’ OR ‘1’ = ‘1’;
+~~~
+
+La respuesta es sencilla, el código nos podría permitir acceder a aquellos sitios de la base de datos
+donde no se hubiesen tomado las medidas de seguridad necesarias, y esa consulta resultaría algo
+como esto:
+
+~~~sql
+$sql= SELECT * FROM usuarios WHERE usuario = ‘mary’ and password = ‘12345’ OR ‘1’ = ‘1’;
+~~~
+
+La serie de comandos utilizados comprueba en la tabla usuarios si existe algún usuario registrado
+con nombre de usuario "mary" y si su contraseña es “12345 o bien que 1 sea igual a 1” y sabemos
+que siempre 1 es igual a 1, simplemente podemos entrar al sistema con el usuario "mary” sin saber
+su verdadera contraseña.
+
+### Ejemplo simple en python y SQL Server:
+
+El código muestra cómo protegerse de una inyección SQL sencilla utilizando parámetros preparados o consultas parametrizadas.
+
+~~~py
+import pyodbc
+
+# Configuración de la conexión a la base de datos
+server = 'localhost'
+database = 'MyDatabase'
+username = 'myuser'
+password = 'mypassword'
+driver= '{ODBC Driver 17 for SQL Server}'
+
+connection_string = f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password}'
+
+# Crear una nueva conexión
+connection = pyodbc.connect(connection_string)
+cursor = connection.cursor()
+
+def login(user, password):
+    # Ejemplo de consulta con parámetros preparados
+    query = "SELECT * FROM Users WHERE UserName=? AND Password=?"
+    cursor.execute(query, (user, password))
+
+    row = cursor.fetchone()
+
+    if row:
+        print("Usuario y contraseña correctos")
+    else:
+        print("Usuario o contraseña incorrectos")
+
+# Usar el login con datos seguros
+login('mary', '12345')
+
+# Cerrar la conexión
+cursor.close()
+connection.close()
+
+~~~
+
+En este ejemplo, los parámetros de la consulta se pasan como tuplas al método execute() del cursor. Esto separa la consulta SQL de los datos que se envían para su ejecución, evitando así la inyección de código. En el caso de una inyección SQL, los caracteres especiales y comillas utilizados para invalidar la consulta no necesitarán ser escapados por el motor de base de datos.
+
+Es importante asegurarse de siempre usar parámetros preparados o consultas parametrizadas en cualquier aplicación que interactúe con una base de datos, especialmente con entornos de producción.
+
+
+
+
+
+
+
+
+
+
+
+
+## A2:2017. Pérdida de Autenticación o Autenticación Rota
+
+Esta vulnerabilidad es cuando los atacantes tienen acceso nombre de usuario y contraseña para
+el relleno de credenciales y normalmente se hace cuando el atacante tiene en su poder
+innumerables de estos datos, incluso cuentas administrativas predeterminadas, y esto pasa
+simplemente cuando las claves o información sensible de las aplicaciones no son protegidas
+adecuadamente, y el agente de amenaza aprovecha estas vulnerabilidades, que en ocasiones son
+ofrecidas en el cierre de sesión, en la gestión de las contraseñas, en el tiempo de desconexión, en
+la función de recordar contraseña, por cierto muy común en estos tiempos para robar la
+información sensible, incluyendo un script en una página web que se ejecuta cuando el usuario la
+utiliza.
+
+Se puede identificar esta vulnerabilidad por la falta de protección en el almacenamiento de las
+credenciales de los usuarios cuando se utiliza hash o cifrado, puede generarse cuando el atacante
+adivina los ID, por ser débiles o simplemente evidentes, falta de caducidad de credenciales y
+cuando la información sensible enviada por canales no cifrados.
+
+Según un artículo publicado en la página welivesecurity.com (Harán, Apenas el 17% de las
+empresas implementa el doble factor de autenticación, 2020), aseguran que solo el 17% de las
+organizaciones implementan el doble factor de autenticación:
+
+> De acuerdo con los datos publicados en el ESET Security Report 2020, el 60% de
+las organizaciones afirma que el acceso indebido a su información es su principal
+preocupación, mientras que al 55% también le preocupa el robo de la misma. Sin
+embargo, de las casi 4000 empresas que participaron en la elaboración de este
+informe que analiza el estado de la seguridad de las empresas de América Latina,
+apenas el 17% dijo implementar la autenticación multifactor como mecanismo de
+gestión para evitar el acceso indebido.
+
+
+Entre otras sugerencias se puede prevenir esta vulnerabilidad, cumpliendo por ejemplo los
+requisitos de autenticación y gestión de sesiones, es importante cerrar sesión (No cerrar ventanas
+de la aplicación o página simplemente), eliminar la opción de recordar contraseñas y mucho
+menos la pregunta secreta y ojalá que las aplicaciones que necesitan resguardar datos e
+información sensible cuenten con un doble factor de autenticación.
+
+**Ejemplo en python**
+
+~~~py
+# Ejemplo de uso de función hash para almacenar contraseñas seguras
+
+import hashlib
+
+def guardar_contraseña(password):
+    # Convertir la contraseña a bytes
+    password_bytes = password.encode('utf-8')
+    
+    # Generar el hash de la contraseña usando algoritmo SHA-256
+    hash_object = hashlib.sha256(password_bytes)
+    hex_digest = hash_object.hexdigest()
+    
+    # Guardar el hash en lugar de la contraseña original
+    with open('secure_passwords.txt', 'a') as file:
+        file.write(f'{hex_digest}\n')
+
+def validar_contraseña(password, saved_hash):
+    # Convertir la contraseña a bytes
+    password_bytes = password.encode('utf-8')
+    
+    # Generar el hash de la contraseña usando el mismo algoritmo SHA-256
+    hash_object = hashlib.sha256(password_bytes)
+    hex_digest = hash_object.hexdigest()
+    
+    # Comparar el hash generado con el guardado en disco
+    return hex_digest == saved_hash
+
+# Ejemplo de uso
+guardar_contraseña('secure_password123')
+
+# Almacenar el hash en lugar de la contraseña original
+saved_hash = '9e107d9d372bb6826bd81d3542a419d6'
+
+# Validación de contraseña
+if validar_contraseña('secure_password123', saved_hash):
+    print("Contraseña válida")
+else:
+    print("Contraseña incorrecta")
+
+~~~
+
+
+
+
+
+
+## A3:2017. Exposición de datos sensibles
+
+La exposición de datos sensibles sería de alguna manera la exposición o facilidad con la que un
+ciberdelincuente, un agente de amenaza o simplemente un usuario malintencionado, puede
+comprometer datos ya sea sustrayéndolos o modificándolos para su propio beneficio, en perjuicio
+a una persona o empresa, por ejemplo, en un fraude con tarjetas de crédito o suplantación de
+identidad, entre otras. Es importante resaltar que los datos sensibles requieren una protección
+adicional para su respaldo en el tránsito de dichos datos por la red. Para los ciberdelincuentes es
+fácil atacar y robar los datos que se encuentran en tránsito muchas más que la criptografía en el
+almacenaje o respaldo, ya que en varias ocasiones se observa como estos viajan en texto plano,
+ya sea desde el cliente al servidor como viceversa, el ataque mencionado se ejecuta utilizando la
+técnica conocida como MITM (Man In The Midle), el cual se genera cuando un ataque en el cual
+se adquiere la capacidad de leer, insertar y modificar a voluntad.
+
+
+~~~py
+import socket
+
+def read_sensitive_data(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            for line in file:
+                # Assuming the file contains sensitive data, let's assume it is a credit card number
+                print("Sensitive Data: " + line.strip())
+    except FileNotFoundError:
+        print("The specified file does not exist.")
+    except Exception as e:
+        print(f"An error occurred while reading the file: {e}")
+
+# Example usage
+file_path = 'sensitiveData.txt'
+read_sensitive_data(file_path)
+~~~
+
+- En este ejemplo, el programa lee un archivo llamado "sensitiveData.txt" y muestra cada línea de contenido como datos sensibles. Dado que no se implementa criptografía en el almacenamiento o respaldo, aunque los datos están cifrados en el cuerpo del archivo, un ciberdelincuente podría atacar el programa y leer y modificar los datos mientras se encuentran en tránsito.
+
+- Ten en cuenta que este es solo un ejemplo para demostrar el concepto de exposición de datos sensibles en la red. En un entorno real, la implementación de criptografía adecuada en el almacenaje y respaldo de los datos es esencial para protegerlos del ataque por MITM.
+
+
+
+Según otro artículo sobre las brechas de seguridad y casos de exposición de datos más importantes
+publicado en la página welivesecurity.com (Harán, Las brechas de seguridad y casos de exposición
+de datos más importantes de 2018, 2018), en el 2018 se evidenció una brecha importante entre
+la seguridad y la exposición de los datos, mencionan varios escándalos de sustracción de datos
+sensibles de famosas páginas de hoteles y de la red social Facebook, donde se menciona
+textualmente: 
+
+> “Facebook protagonizo uno de los incidentes más importantes de este 2018 cuando
+en febrero se hizo público que la compañía cedió datos personales de más de 90
+millones de usuarios a la consultora política, y que esa información había sido
+utilizada en la última campaña electoral de los Estados Unidos”, algo que afecto a
+miles de usuarios de la red, además el articulo menciona lo sucedido en Google, y
+por supuesto lo sucedido en la cadena Marriot International, donde la misma “se
+convirtió en la segunda brecha más grande de la historia detrás de la que sufrió Yahoo
+en 2013” (Harán, Las brechas de seguridad y casos de exposición de datos más
+importantes de 2018, 2018)
+
+**Para evitar esta vulnerabilidad se sugiere:**
+
+* ✓ Reducir los datos sensibles almacenados, o sea, no almacenar datos sensibles que sean
+innecesarios.
+
+* ✓ Clasificar los datos que son procesados y almacenados, y posteriormente transmitidos
+con respecto a su nivel de sensibilidad
+
+* ✓ Establecer roles a los usuarios, y los controles pertinentes a cada nivel
+
+* ✓ Todos los datos sensibles deben ser cifrados
+
+* ✓ Se recomienda cifrar los datos en tránsito con protocolos de seguridad
+
+* ✓ Las contraseñas deben tener un trato especial de almacenamiento y cifrado
+
+
+### Ejemplo visibilidad en programación orientada a objeto (POO):
+
+Cuando definimos la visibilidad en los componentes de un proyecto, primero
+debemos saber los niveles de una clase:
+
+<img src="/src/content/blog/p-s-semana-6/ejemplo_visibilidad_poo.png" alt="drawing" width="1280"/>
+
+Estas pueden tener 3 tipos de visibilidad.
+
+* public (+)
+* private (-)
+* protected (#)
+
+De acuerdo a los tipos de visibilidad mencionados anteriormente, podemos visualizar en el código
+lo siguiente:
+
+- Visibilidad pública: 
+
+~~~java
+public class Calculo {
+    public int a,b,c;
+
+    public void Calculo(int a, int b, int c){
+        this.a = a;
+        this.b = b;
+        this.c = c;
+    }
+}
+~~~
+
+- Visibilidad privada:
+
+~~~java
+public class Calculo {
+    private int a,b,c;
+
+    private void Calculo(int a, int b, int c){
+        this.a = a;
+        this.b = b;
+        this.c = c;
+    }
+}
+~~~
+
+
+### Ejemplo en python:
+~~~py
+import hashlib
+from cryptography.fernet import Fernet
+
+def generar_clave():
+    return Fernet.generate_key()
+
+def guardar_contrasena(clave, contrasena):
+    cipher = Fernet(clave)
+    encrypted_password = cipher.encrypt(contrasena.encode())
+    with open('secure_password.txt', 'wb') as f:
+        f.write(encrypted_password)
+
+def recuperar_contrasena(clave):
+    cipher = Fernet(clave)
+    with open('secure_password.txt', 'rb') as f:
+        encrypted_password = f.read()
+    decrypted_password = cipher.decrypt(encrypted_password).decode()
+    return decrypted_password
+
+if __name__ == "__main__":
+    clave = generar_clave()
+    contrasena = input("Ingrese su contraseña: ")
+    guardar_contrasena(clave, contrasena)
+
+    print("La contraseña se ha guardado con éxito.")
+~~~
+
+Este programa utiliza la biblioteca cryptography de Python para encriptar y desencriptar la contraseña. La clave de cifrado es generada al inicio del programa y guarda en un archivo seguro.
+
+El primer uso (cuando se ejecuta el script por primera vez) guarda la contraseña con su clave de encriptación correspondiente, luego se pregunta al usuario que desee recuperar la contraseña. Al ingresar la misma clave de cifrado del archivo guardado, se desencripta y muestra la contraseña original.
+
+Teniendo en cuenta que esta es una aplicación básica, realice pruebas adicionales para validar el funcionamiento correcto del programa. En un entorno más seguro, podría considerar almacenar las claves de cifrado y la contraseña en archivos separados y usar un gestor de contraseñas.
+
+Además, este ejemplo es solo para demostrar cómo se puede utilizar la encriptación para proteger información sensible en Python. En el entorno real, asegúrese de implementar medidas adicionales como el cifrado del almacenamiento y respaldo de los datos sensibles, entre otros.
+
+
+## A4:2017. Entidades Externas XML
+
+Según el OWASP Top Ten (OWASP , 2017), “los atacantes pueden explotar procesadores XML
+vulnerables si pueden cargar XML o incluir contenido hostil en un documento XML, explotando
+código vulnerable, dependencias o integraciones”. 
+
+Primeramente, vamos a contextualizar qué es XML. XML es un metalenguaje, similar a HTML, de
+‘marcado de propósito general’, eso quiere decir que no está predefinido, resaltando que las
+etiquetas se construyen, un atacante a esta vulnerabilidad puede explotar procesadores de lenguaje
+XML si carga o modifica un documento XML con contenido hostil, explotando código vulnerable.
+En muchas ocasiones encontramos procesadores XML mal configurados o que son antiguos.
+
+Las entidades externas son utilizadas generalmente para revelar archivos internos mediante la URI,
+o archivos internos en servidores no actualizados, escanear puertos LAN, ejecutar código de forma
+remota y realizar ataques de denegación de servicio (DoS). En muchas ocasiones los procesadores
+XML antiguos permiten la descripción de una entidad externa.
+
+El documento de la OWASP Top Ten (OWASP , 2017) ejemplifica de la siguiente manera un
+ataque de denegación de servicio al incluir un archivo potencialmente interminable:
+
+~~~xml
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [
+<!ELEMENT foo ANY >
+<!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
+<foo>&xxe;</foo>
+<!ENTITY xxe SYSTEM "https://192.168.1.1/private" >]>
+<!ENTITY xxe SYSTEM "file:///dev/random" >]>
+~~~
+
+Por tanto, el sistema o aplicación basada en XML puede ser vulnerable si: 
+
+<div style="text-align: start; border: 2px solid #0f0f0f; padding: 10px;">
+✓ La aplicación acepta XML
+
+✓ La aplicación utiliza SAML (Security Assertion Markup Language) el cual es un estándar
+de código abierto basado en XML para el procesamiento de identidades dentro de la
+seguridad federada o para propósitos de Single Sign-On (SSO). SAML utiliza XML para
+garantizar la identidad de los usuarios y puede ser vulnerable.
+
+✓ Ser vulnerable a ataques XXE significa que probablemente la aplicación también es
+vulnerable a ataques de denegación de servicio.
+</div>
+
+### Ejemplo simple de como protegerse en python
+
+~~~py
+import xml.etree.ElementTree as ET
+from defusedxml import ElementTree as defused_ET
+
+def safe_parse(data):
+    try:
+        # Intenta analizar el XML utilizando defusedxml.ElementTree
+        root = defused_ET.fromstring(data)
+    except (defused_ET.ParseError, defused_ET.DefusedExternalEntityReadError) as e:
+        # Si falla la analisis, lanza una excepcion personalizada
+        raise ValueError("Invalid XML")
+
+    # Si no hay excepciones, devuelve el nodo raiz del XML
+    return root
+
+xml_data = """<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [
+<!ELEMENT foo ANY >
+<!ENTITY xxe SYSTEM "https://192.168.1.1/private" >]>
+<foo>&xxe;</foo>"""
+
+try:
+    root = safe_parse(xml_data)
+except ValueError as e:
+    print(f"Error: {e}")
+else:
+    print("XML parse successful")
+~~~
+
+En este ejemplo, el archivo XML externo que intenta incluirse no existe, por lo tanto, defusedxml.ElementTree lanza una excepcion DefusedExternalEntityReadError. Esto significa que la aplicación no ha sido vulnerable al ataque XXE.
+
+Ten en cuenta que es importante actualizar el software y las bibliotecas utilizadas constantemente, para protegerte de estas vulnerabilidades.
+
+
+# Ejemplo de vulnerabilidad
+
+Ejemplifiquemos un poco a la vulnerabilidad de XXE (Xml eXternal Entity) es un tipo de
+vulnerabilidad que se produce en aplicaciones que hacen uso de «parsers» XML, esto quiere decir
+que el sistema o la aplicación recibe como entrada un documento XML y para procesarlo hacen
+uso de alguna librería de parseo como LibXML, Xerces, MiniDOM, SAX etc, el agente de amenza
+la aprovecha especialmente para ser manipulado para conseguir que el parser (Un analizador
+sintáctico ) XML divulgue información del sistema, consuma recursos en exceso, ejecute comandos
+u otras formas de explotación, este ataque solo se hace posible cuando la forma de interpretar el
+XML permite la inclusión de entidades externas debido a su mala configuración, esto puede llevar
+también a la lectura de archivos y mapeo de red interna, denegaciones de servicio, entre otros.
+
+Un DTD (Definición del tipo de documento), es una descripción de estructura y sintaxis de un
+documento XML o SGML, y se encarga de decirle a el parser XML (motor XML) como va a estar
+compuesto un fichero de este tipo. Cada vez que un xml es cargado, el que se ocupa de verificar
+si dicho fichero presenta una estructura correcta, entre otras cosas, es el parser XML y lo hace
+primero consultando el DTD.
+
+Los DTD pueden encontrarse dentro del documento.
+~~~xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE secsignal [
+]>
+~~~
+
+Todo lo que se encuentra dentro del tag [] es parte del DTD.
+O externos al mismo.
+
+~~~xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE secsignal SYSTEM "fichero.dtd" [
+]>
+~~~
+
+
+La vulnerabilidad se encuentra en lo siguiente Content-Types: text/xml, application/xml.
+
+## 2.1. Ejemplo de XML:
+
+<img src="/src/content/blog/p-s-semana-6/ejemplo_xml.png" alt="drawing" width="720"/>
+
+Como podemos visualizar, el proyecto consta de varios archivos XML.
+
+A continuación, podremos visualizar el archivo XML que corresponde directamente al proyecto:
+
+<img src="/src/content/blog/p-s-semana-6/ejemplo_xml2.png" alt="drawing" width="720"/>

@@ -1,0 +1,98 @@
+---
+import BlogCard from '@/components/BlogCard.astro'
+import BlogCardMusic from '@/components/BlogCardMusic.astro'
+import Container from '@/components/Container.astro'
+import Link from '@/components/Link.astro'
+import { buttonVariants } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { SITE } from '@/consts'
+import Layout from '@/layouts/Layout.astro'
+import { getCollection } from 'astro:content'
+import { FileMusicIcon } from 'lucide-react'
+
+const blog = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE)
+
+const blog_music = (await getCollection('blog_music'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE)
+---
+
+<Layout title="Home" description={SITE.DESCRIPTION}>
+  <Container class="flex flex-col gap-y-6">
+    <section>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-3xl">{SITE.TITLE}</CardTitle>
+          <CardDescription
+            >LLLIT &bull; <span class="font-semibold">admin</span
+            ></CardDescription
+          >
+        </CardHeader>
+        <CardContent>
+          <p class="mb-2 text-sm text-muted-foreground">
+            Bienvenido a {SITE.TITLE}! En este espacio queremos compartir nuestra pasión por la tecnología y programación con todos. Nuestro objetivo es brindarte información relevante, recursos y herramientas para mejorar tus habilidades en estas áreas.
+          </p>
+          <p class="text-sm text-muted-foreground">
+            {SITE.TITLE} es una plataforma en línea que te ofrece un acceso a información actualizada y valiosa sobre tecnologías y programación. Te invitamos a leer nuestros artículos y recursos, compartir tu experiencia y contribuir a la comunidad de desarrolladores y entusiastas de estas tecnologías. ¡Esperamos que disfrutes del viaje educativo en {SITE.TITLE}!
+          </p>
+        </CardContent>
+      </Card>
+    </section>
+    <section class="flex flex-col gap-y-4">
+      <h2 class="text-2xl font-bold">Post Tecnologias</h2>
+      <ul class="not-prose flex flex-col gap-y-4">
+        {
+          blog.map((post) => (
+            <li>
+              <BlogCardMusic entry={post} />
+            </li>
+          ))
+        }
+      </ul>
+      <div class="flex justify-center">
+        <Link
+          href="/blog"
+          class={buttonVariants({ variant: 'ghost' }) + ' group'}
+        >
+          Ver todos las publicaciones <span
+            class="ml-1.5 transition-transform group-hover:translate-x-1"
+            >&rarr;</span
+          >
+        </Link>
+      </div>
+    </section>
+    <section class="flex flex-col gap-y-4">
+      <h2 class="text-2xl font-bold">Post Music</h2>
+      <ul class="not-prose flex flex-col gap-y-4">
+        {
+          blog_music.map((post) => (
+            <li>
+              <BlogCard entry={post} />
+            </li>
+          ))
+        }
+      </ul>
+      <div class="flex justify-center">
+        <Link
+          href="/blog_music"
+          class={buttonVariants({ variant: 'ghost' }) + ' group'}
+        >
+          Ver todos las publicaciones <span
+            class="ml-1.5 transition-transform group-hover:translate-x-1"
+            >&rarr;</span
+          >
+        </Link>
+      </div>
+    </section>
+  </Container>
+</Layout>

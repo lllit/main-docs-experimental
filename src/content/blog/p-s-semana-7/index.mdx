@@ -1,0 +1,302 @@
+---
+title: 'Semana 7 - Programación Segura'
+description: 'PRÁCTICAS DE PROGRAMACIÓN SEGURA PARA
+DESARROLLO - OWASP'
+date: 2024-12-04
+tags: ['Programación segura', 'tecnologia']
+image: './ps.png'
+authors: ['enscribe']
+---
+
+# PROGRAMACIÓN SEGURA
+
+Para lograr una programación segura se deben aplicar los principios y buenas prácticas de la
+seguridad informática durante todo el desarrollo del software, es decir, en todo el ciclo de vida del
+desarrollo del software (SDLC), estableciendo políticas, lineamientos y niveles de seguridad que
+amerite el sistema que se esté desarrollando. 
+
+Según el documento OWASP Top Ten (2017, p 5), los agentes atacantes pueden, potencialmente,
+utilizar diferentes rutas o tipos de ataques, aprovechando diversas vulnerabilidades para perjudicar
+la empresa u organización. La siguiente figura muestra las rutas que puede seguir un atacante.
+
+<img src="/src/content/blog/p-s-semana-7/imagenes/1_ps.png" alt="drawing" width="720"/>
+
+> Cada uno de estos caminos representa un riesgo que puede o no ser suficientemente grave
+como para merecer atención y algunas veces, estos caminos son fáciles de encontrar y
+explotar, mientras que otros son extremadamente difíciles. De la misma manera, el
+perjuicio ocasionado puede no tener consecuencias, o puede dejarlo en la quiebra. A fin
+de determinar el riesgo para su organización, puede evaluar la probabilidad asociada a
+cada agente de amenaza, vector de ataque, debilidad de seguridad y combinarlo con una
+estimación del impacto técnico y de negocio para su organización. Juntos, estos factores
+determinan su riesgo general. (The Open Web Applicatión Security Project (OWASP), 2017,
+pág. 5)
+
+## Amenazas 
+
+Algunas amenazas informáticas comunes en la actualidad:
+
+- **Ataques de contraseña:** se quiere adivinar las contraseñas, usando, en ocasiones, diccionarios de palabras o de contraseñas filtradas.
+
+- **DDoS:** es una denegación de servicio distribuido, en muchas ocasiones usando botnet, que son muchos computadores comprometidos, para atacar de manera sincronizada a una organización.
+
+- **SQL Injection:** es aquella que se provoca por una falla en la seguridad de las páginas web, donde se involucra declaraciones SQL maliciosas.
+
+- **Cross-site scripting (XSS):** es una amenaza común en páginas web, la que permite a un atacante inyectar código JavaScript o de otro lenguaje para robar información sensible, secuestrar sesiones de usuarios o comprometer el navegador.
+
+
+### Otras definiciones
+
+Otras definiciones importantes que reconocer son:
+
+- **Actores de amenaza:** estos actores son individuos o grupos de personas que realizan un ataque contra otros.
+
+- **Aficionados o script kiddies:** son aquellos que tienen poca o nula habilidad, pero utilizan script o descargan y usan herramientas o programas sofisticadas desarrollados por otros, fáciles de usar, para atacar sistemas informáticos, redes y defectos de sitios web. (Valencia, 2018)
+
+- **Hacktivista:** sus actividades contra ideologías políticas o sociales, del tipo protesta. Generalmente sus intenciones son de denegar servicio, modificar páginas web o filtrar información sensible. La diferencia con el hacking es que éste es una irrupción ilegal a sistemas computacionales con fines criminales, mientras que el hacktivismo es el uso legal o ilegal de herramientas digitales para fines políticos y de protesta. (Muy Interesante, 2018)
+
+- **Usuario descuidado:** es un usuario sin conocimientos específicos o apropiados y que accidentalmente daña la información, servicios o infraestructura de un sistema informático.
+
+- **Cracker o ciberdelincuente:** Del inglés to crack, que significa romper o quebrar. Este término se utiliza para referirse a las personas que tienen grandes conocimientos de software, hardware y redes, y rompen o vulneran algún sistema de seguridad y puede diseñar sus propias armas para atacar a una persona u organización para un beneficio económico, protesta o por desafío. Este utiliza sus conocimientos para invadir sistemas, descifrar y algoritmos de encriptación, ya sea para poder correr juegos sin un CD-ROM, o generar una clave de registro falsa para un determinado programa, robar datos personales, o cometer otros actos ilícitos informáticos. Algunos intentan ganar dinero vendiendo la información robada, otros sólo lo hacen por fama o diversión. (Valencia, 2018)
+
+- **APT o amenaza persistente avanzada:** es un ataque dirigido con un gran nivel de
+sofisticación, grandes recursos, gran entrenamiento y motivación. Usan malware,
+vulnerabilidades de día cero, ingeniería social y otras herramientas.
+
+## Riesgo A5:2017: Pérdida del control de acceso
+
+Cuando se habla de control de acceso, es cuando se determina qué usuario(s) se comunican con la aplicación, y principalmente, a los recursos a los que tiene acceso dentro del sistema y, por tanto, a la empresa. Cuando se pierde el control de acceso, cualquiera puede enviar solicitudes a la aplicación de red y, por tanto, esto significa que el acceso no autorizado a los recursos del sistema es una vulnerabilidad que puede ser explotable y que abre a la empresa a resultados que pueden perjudicarla y potencialmente costosos.
+
+Según un artículo publicado en la página blog.nivel4.com sobre Buenas prácticas de desarrollo seguro: A5 Pérdida de Control de Acceso, señala que los roles que se determinan para los diferentes usuarios del sistema o aplicación existen para delimitar las acciones o procesos que pueden o no hacerse. Estas delimitaciones no siempre se aplican correctamente y una de las habilidades esenciales de los agentes de amenazas o ciberdelincuentes, es la explotación del control de acceso, y de lograrlo
+
+> …pueden acceder, de forma no autorizada, a funcionalidades y/o datos, cuentas de otros usuarios, ver archivos sensibles, modificar datos, cambiar derechos de acceso y permisos, y otras acciones relacionadas con la divulgación, modificación o incluso, destrucción de datos o del mismo sistema. (NIVEL4 Seguridad, 2018)
+
+El impacto técnico básicamente es cuando los agentes de amenaza pueden actuar usuarios autorizados o administradores; y el impacto a la empresa va a depender de las necesidades de la aplicación y de los datos que se tengan.
+
+La pérdida del control de acceso es a menudo un problema que surge en las aplicaciones o páginas web que van aumentando gradualmente su tamaño, ya que, en lugar de diseñar deliberadamente esquemas que regulen el acceso desde el principio, los desarrolladores los agregan a medida que crece la aplicación, a lo largo del tiempo y cuando el control de acceso no está centralizado, esto a menudo resulta en un esquema muy complejo que es difícil de entender por completo. Un esquema complejo, a su vez, conduce a errores y vulnerabilidades y estas vulnerabilidades son altamente explotables.
+
+Entre las vulnerabilidades más comunes que se pueden mencionar de control de acceso tenemos:
+
+- Pasar por alto la comprobación de los privilegios al modificar la URL
+- Se pueden elevar los roles y privilegios de usuarios no autorizados
+- Acceder a una API sin control de acceso mediante el uso de verbos POST, PUT y DELETE.
+- Se permite que la clave primaria cambie a la de otro usuario, logrando ver o editar la cuenta de otra persona.
+
+### ¿Cómo podemos prevenir la Pérdida de Control de Acceso? 
+
+Según hemos revisado a lo largo de este módulo, la primera respuesta que deberíamos dar a esta pregunta es **diseñando la aplicación en base a políticas de acceso claras para cada archivo y tipos de usuarios/administradores.** El control de acceso debe implementarse y ejecutarse a través de una matriz de control de acceso, que definirá las reglas para cada tipo de usuario. Estos puntos de acceso deben ser probados rigurosamente creando diferentes cuentas e intentando acceder a áreas no autorizadas, para así asegurarnos de no dejar “abierto” ningún acceso que ponga en riesgo nuestro sistema y/o aplicación. 
+
+**Otras recomendaciones incluyen:** 
+
+- Comprobar los permisos de los archivos individuales, no solo los directorios.
+- Asegurarse de que el público no tenga acceso a los archivos de configuración, archivos predeterminados y scripts. Limitar los accesos al directorio y los archivos ejecutables también.
+- Restringir el almacenamiento en caché. El almacenamiento en caché del lado del cliente ayuda a acelerar los sitios web, pero otros pueden volver a acceder a esta información. 
+- Use encabezados http y meta etiquetas para evitar que se recarguen las páginas
+restringidas
+- No confíe en el «control de acceso a la presentación». La eliminación de un botón de navegación no evitará que atacantes lleguen allí. Cada página debe estar autenticada.
+- Limitar los permisos de administración remota tanto como sea posible.
+
+Finalmente, un ciclo de desarrollo seguro debe incluir una prueba de penetración antes de lanzar el sistema a producción y mientras éste esté operando.
+
+### ¿Cómo podemos detectar vulnerabilidades de Control de Acceso? 
+
+Tener una guía escrita que describa los diversos permisos necesarios es indispensable. Es altamente probable que, si se carece de esta guía, la aplicación sea vulnerable a Pérdida de Control de Acceso
+
+Para detectar las posibilidades de Pérdida de Control de Acceso es necesario efectuar revisiones manuales del código, puesto que herramientas automatizadas son inefectivas para detectar estos errores en la programación. Es imprescindible, además, comprender cómo los usuarios y administradores se autentican y acceden al sitio (lo que suele suceder en un portal de acceso
+remoto), por lo que las pruebas de penetración hechas por una entidad independiente se hacen ultra necesarias, y éstas deben incluir una auditoría exhaustiva de todos los datos accesibles y sus permisos otorgados.
+
+### ¿Cómo se usa la Pérdida de Control de Acceso en un ataque?
+
+- En 2012, hackers maliciosos obtuvieron acceso a los servidores de IRS (el SII
+estadounidense) en Carolina del Sur a través de una contraseña de administrador
+predeterminada, robando 3.6 millones de números de seguridad social.
+- Un sitio web que enumera su rol de usuario en la URL, por ejemplo, http: // sitio web / usuario / cuenta. Un atacante simplemente puede cambiar la URL a http: // sitio web / administración / cuenta y eludir las contraseñas u otros controles.
+- Un ataque de fuerza bruta podría dañar un panel de administración si éste tuviese una contraseña débil o predeterminada.
+- Las referencias inseguras de objetos directos son variables que pueden ser manipuladas por el destinatario y utilizadas para recuperar más datos. Por ejemplo, un usuario puede obtener una lista de contraseñas o acceder a otros archivos con comandos simples en la ventana de la URL.
+
+## Riesgo A6:2017: Configuración de seguridad Incorrecta:
+
+La configuración incorrecta o simplemente que se configure un sistema por defecto puede comprometer un sistema o aplicación por completo. Cuando se configura una aplicación o sistema, es importante que esta configuración sea de forma personalizada, evitando configuraciones genéricas, ya que, la incorrecta configuración de seguridad puede estar presente en cualquier plataforma o herramienta tecnológica, como los servicios de red, el servidor web, el de aplicaciones, las bases de datos a la cual se tiene acceso, entre otras.
+
+Las malas configuraciones de seguridad son comunes en muchas aplicaciones web, no actualizar aplicaciones/software (el sistema operativo, las bibliotecas de códigos, el servidor de aplicaciones / web, la base de datos) es sólo una de las causas de errores de configuración de seguridad.
+
+Las configuraciones erróneas de seguridad lógicamente se pueden reducir. Primero, hay que partir asegurándose de tener entornos reforzados idénticos (desarrollo, control de calidad y producción), además de verificar tener implementado un proceso de administración de parches que no solo aborde parches en el sistema operativo, DB y aplicaciones, sino también en las bibliotecas de
+códigos que se utilizan para las aplicaciones. Una auditoria periódica ayudará bastante para asegurarse que la organización esté al tanto de actualizaciones faltantes
+
+### Vulnerabilidades en aplicaciones 
+
+El documento de la OWASP Top Ten (2017, pág. 12) sobre Los diez riesgos más críticos en Aplicaciones Web, nos señala algunos ejemplos de vulnerabilidades en el siguiente listado:
+
+- Falta hardening adecuado en cualquier parte del stack tecnológico, o permisos mal configurados en los servicios de la nube.
+- Se encuentran instaladas o habilitadas características innecesarias (ej. puertos, servicios, páginas, cuentas o permisos)
+- Para los sistemas actualizados, las nuevas funciones de seguridad se encuentran
+desactivadas o no se encuentran configuradas de forma adecuada o segura.
+- Las configuraciones de seguridad en el servidor de aplicaciones, en el framework de aplicación (ej., Struts, Spring, ASP.NET), bibliotecas o bases de datos no se encuentran especificados con valores seguros.
+- El servidor no envía directrices o cabeceras de seguridad a los clientes o se encuentran configurados con valores inseguros.
+
+Hay que recordar que el atacante o ciberdelincuente por lo general intentará explotar vulnerabilidades que no han sido parchadas, acceder a cuentas por defecto, páginas no utilizadas, archivos y directorios desprotegidos, etc. Así, de este modo obtendrá acceso o conocimiento de nuestro sistema. 
+
+Por ello, algunos consejos para evitar vulnerabilidades de seguridad son: 
+
+- Configurar los entornos de desarrollo, de control de calidad (QA) y de producción de manera idéntica y con diferentes credenciales para cada uno.
+- Usar una plataforma minimalista sin funcionalidades innecesarias, componentes,
+documentación o ejemplo. Elimine o no instale frameworks y/o funcionalidades que no serán utilizadas
+- Diseñar y seguir un proceso para revisar y actualizar las configuraciones apropiadas de acuerdo a las advertencias de seguridad y siguiendo un proceso de gestión de parches
+
+- Tener una arquitectura segmentada que proporcione una separación efectiva y segura
+entre componentes y acceso a terceros en el sistema y/o aplicación
+- Utilizar un proceso automatizado para verificar la efectividad de los ajustes y
+configuraciones en todos los ambientes
+
+Algunas recomendaciones para la mitigación de esta vulnerabilidad son:
+
+- No utilizar contraseñas comunes
+- No utilizar usuarios genéricos
+- No usar configuraciones por defecto
+- Configurar correctamente los permisos y propietarios de directorios y archivos
+- Mantener los sistemas actualizados
+- Configurar de forma correcta las cabeceras HTTP
+- Evitar exponer componentes y versiones en las cabeceras o en las rutas de archivos
+
+## Riesgo A7:2017: Cross-Site Scripting XSS:
+
+XSS es el acrónimo usado para “Cross Site Scripting”, es un tipo de vulnerabilidad de los aplicativos webs, el cual puede permitir a un atacante inyectar código JavaScript u otro lenguaje similar sobre dicha página web. XSS es un vector de ataque que puede ser utilizado para robar información delicada, secuestrar sesiones de usuario, y comprometer el navegador, comprometiendo así la
+integridad de nuestro sistema.
+
+La vulnerabilidad por XSS se dice que es la segunda más frecuente en el Top 10 (2017), y se encuentra con frecuencia en aplicaciones web.
+
+El impacto de la vulnerabilidad en XSS va a depender de qué tipo es. Si es XSS reflejado; es de nivel moderado y en el caso de XSS en DOM también, pero es severa para XSS Almacenado, ya que este permite robar sesiones, instalación de software malicioso y pueden realizar cambios sustanciales en la aplicación.
+
+Según un artículo publicado en la página blog.nivel4.com sobre Buenas prácticas de desarrollo seguro: A7 Secuencia de comandos en sitios cruzados (XSS), señala que este ataque es uno de inyección de código y principalmente permite a un agente de amenaza ejecutar un script malicioso en una aplicación web dinámica. 
+
+El documento de la OWASP Top Ten (2017) señala que: 
+
+> Los XSS ocurren cuando una aplicación toma datos no confiables y los envía al navegador
+web sin una validación y codificación adecuada; o actualiza una página web existente con
+datos suministrados por el usuario utilizando una API que ejecuta JavaScript en el navegador.
+Esta vulnerabilidad permite que se ejecuten comandos en el navegador de la víctima y el
+ciberdelincuente puede secuestrar una sesión, modificar (defacement) los sitios web, o
+redireccionar al usuario hacia un sitio malicioso. (The Open Web Applicatión Security Project
+(OWASP), 2017, pág. 6)
+
+### Formas de XSS para atacar navegadores: 
+
+Como se mencionó en párrafos anteriores, existen 3 formas de XSS para atacar a los navegadores de los usuarios, estos son:
+
+- **XSS Reflejado o no persistente:** Una URL transporta un parámetro modificado que actúa al ser accedido por un visitante.
+
+Es decir que el código que insertamos no se queda almacenado en la web, sino que va insertado dentro de un enlace que llega de algún modo a la víctima para que pinche en él, una vez hecho eso el navegador dirigirá a una página donde el usuario tenga cuenta o deba rellenar algún formulario, allí ejecutará el código (malicioso) insertado y el atacante le robará la cookie de la sesión, o los datos insertados en el formulario. Lo complejo de este ataque, como nombramos más
+arriba, es que nada queda almacenado en el servidor web. (NIVEL4 Seguridad, 2018)
+
+- **XSS Almacenado o persistente:** La API almacena datos proporcionados por el usuario sin validar ni sanear, los que posteriormente son visualizados o utilizados por otro usuario o un administrador. Usualmente es considerado como de riesgo de nivel alto o crítico.
+
+En ambos casos, el atacante malicioso inyecta código sobre algún campo de entrada de datos que ofrezca la página web, bien sea este la típica cajita con el icono de la lupa para búsqueda de palabras clave, un recuadro de espacio de participación en un foro, o un formulario de recogida de datos.
+
+- **XSS Basados en DOM:** frameworks en JavaScript, aplicaciones de página única o APIs incluyen datos dinámicamente, controlables por un atacante. Idealmente, se debe evitar procesar datos controlables por el atacante en APIs no seguras. 
+
+<img src="/src/content/blog/p-s-semana-7/imagenes/2_ps.png" alt="drawing" width="720"/>
+
+- Los ataques XSS incluyen el robo de la sesión, apropiación de la cuenta, evasión de autentificación de múltiples pasos, reemplazo de nodos DOM, inclusión de troyanos de autentificación, ataques contra el navegador, descarga de software malicioso, keyloggers, entre otros.
+
+- Hoy existen herramientas automatizadas que permiten detectar y explotar las tres formas de XSS, y también se encuentran disponibles kits de explotación gratuitos.
+
+- El impacto de XSS es moderado para el caso de XSS Reflejado y XSS en DOM, y severa para XSS Almacenado, que permite ejecutar secuencias de comandos en el navegador de la víctima, para robar credenciales, secuestrar sesiones, o la instalación de software malicioso en el equipo de la víctima. (NIVEL4 Seguridad, 2018)
+
+Según el artículo Buenas prácticas de desarrollo seguro: A7 – Secuencia de comandos en sitios cruzados (XSS) (NIVEL4 Seguridad, 2018), señala que, dado que los ataques XSS ocurren debido a inyecciones de código, para prevenir dichos ataques, es necesario que se manejen adecuadamente las entradas de información que el sistema o aplicación utilizará. También es importante que todos los parámetros de entrada sean correctamente validados y filtrados de acuerdo a distintos criterios. 
+
+El tratamiento de estos datos puede ser:
+
+- **Filtrar:** En base a patrones o expresiones regulares, determinar qué tipo de datos acepta el sistema y cuáles no.
+- **Escapar:** Aceptar todo tipo de datos, pero escapándolos correctamente.
+- **Sanear:** Aceptar todo tipo de datos, pero eliminando el contenido inapropiado.
+- **Transformar:** Aceptar todo tipo de datos, pero transformándolos a un tipo de datos aceptado.
+
+Entender la diferencia que existe entre estos distintos métodos es fundamental, ya que se debe adaptar al funcionamiento de la aplicación. Por ejemplo, si tenemos un editor de texto enriquecido, mediante el cual se permite al usuario manipular código HTML, no se debería optar por la opción de escapar los caracteres, ya que al momento de mostrar la información el navegador no lo interpretará y lo mostrará como texto.
+
+Para entender cómo funcionan cada uno de estos métodos, los invitamos a revisar la siguiente imagen:
+<img src="/src/content/blog/p-s-semana-7/imagenes/3_ps.png" alt="drawing" width="720"/>
+
+En el input de ejemplo se puede ver un script javascript, el cual gatilla una alerta en el navegador. Dependiendo el tipo de método que apliquemos sobre los parámetros de entrada, podemos ver el output que deberíamos obtener.
+
+## Riesgo A8:2017: Deserialización Insegura:
+
+Según el documento de la OWASP Top Ten (2017), los defectos de la deserialización insegura ocurren cuando una aplicación recibe objetos serializados dañinos y estos objetos pueden ser manipulados o borrados por el atacante para realizar ataques de repetición, inyecciones o elevar sus privilegios de ejecución. En el peor de los casos, la deserialización insegura puede conducir a la ejecución remota de código en el servidor. 
+
+Desde otra página web, sobre seguridad ofensiva se señala que: 
+> La deserialización insegura es una vulnerabilidad que ocurre cuando los datos no confiables se usan para abusar de la lógica de una aplicación, infligir un ataque de denegación de servicio (DoS) o incluso ejecutar código arbitrario.
+
+> Para entender esta vulnerabilidad, es necesario entender el proceso de serialización. La serialización es el proceso de traducir estructuras de datos o estados de objetos a un formato que puede almacenarse y reconstruirse con posterioridad. La deserialización, por otro lado, es lo opuesto a la serialización, es decir, transformar los datos serializados provenientes de un archivo, secuencia o socket de red en un objeto. Es en este último proceso donde reside la vulnerabilidad. 
+
+> La mayoría de los lenguajes de programación ofrecen la posibilidad de personalizar los procesos de deserialización. Desafortunadamente, con frecuencia es posible que un atacante abuse de estas características de deserialización cuando la aplicación deserializa datos no confiables que controla el atacante. Los ataques de deserialización inseguros permiten que un atacante realice ataques de denegación de servicio (DoS), omisiones de autenticación y ataques de ejecución remota de código. (Castillo, 2019)
+
+Un sistema o aplicación puede ser vulnerable, si se logra deserializar los objetos hostiles o manipulados por el atacante, y puede ocasionar principalmente 2 tipos de ataques:
+
+- Ataques relacionados con la estructura de datos y objetos; donde el atacante
+modifica la lógica de la aplicación o logra una ejecución remota de código que
+puede cambiar el comportamiento de la aplicación durante o después de la deserialización.
+
+- Ataques típicos de manipulación de datos; como ataques relacionados con el control de acceso, en los que se utilizan estructuras de datos existentes, pero se modifica su contenido.
+
+Estos ataques pueden modificar la lógica de la aplicación logrando una ejecución remota de código entre otros problemas.
+
+### Ejemplo de deserelización insegura 
+
+A continuación podemos visualizar un ejemplo en lenguaje Java de deserialziación insegura.
+
+~~~java
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream("file.ser"));
+        Object object = ois.readObject();
+        ois.close();
+
+        if (object instanceof User) {
+            User user = (User) object;
+            System.out.println("User: " + user.getName() + ", Password: " + user.getPassword());
+        } else if (object instanceof Admin) {
+            Admin admin = (Admin) object;
+            System.out.println("Admin: " + admin.getUsername() + ", Role: " + admin.getRole());
+        }
+    }
+}
+~~~
+
+Este ejemplo de deserialización insegura funciona utilizando ObjectInputStream para leer objetos serializados desde un archivo llamado file.ser. El código lee el primer objeto deserializado del archivo, que supón que es una instancia de la clase User o Admin, y luego imprime información específica según sea la instancia.
+
+El problema se produce porque no hay ninguna validación ni filtro sobre los objetos deserializados antes de usarlos. Si un atacante crea un archivo serializado que contiene un objeto malicioso, como una clase no autorizada o que contenga código malicioso, el código podría ejecutar este código en memoria y provocar un ataque de deserialización inseguro.
+
+Para reducir la exposición a vulnerabilidades de deserialización insegura, se debe implementar una lógica de validación adecuada antes de procesar los objetos deserializados. Esto podría incluir:
+
+- Verificar que el tipo del objeto serializado coincide con la clase que se espera utilizar para el deserializador.
+- Filtrar y/ó transformar los datos antes de intentar usarlos.
+- Protegerse contra ataques de deserialización en cadena, asegurándose de que solo se puedan serializar tipos autorizados y no clases internas o específicas de la implementación del proyecto.
+
+En resumen, el objetivo principal de deserialización insegura es permitir que un atacante modifique la lógica de la aplicación, lo que puede llevar a ataques de denegación de servicio (DoS), omisiones de autenticación y ejecución remota de código. Por lo tanto, es importante implementar medidas de seguridad para protegerse frente a esta vulnerabilidad, como limitar el tipo de objetos que pueden ser deserializados o filtrar los datos antes de utilizarlos.
+
+### Recomendaciones
+
+El único patrón de arquitectura seguro es no aceptar objetos serializados de fuentes no confiables o utilizar medios de serialización que sólo permitan tipos de datos primitivos.
+Si esto no es posible, considere alguno de los siguientes puntos:
+
+- Implemente verificaciones de integridad tales como firmas digitales en cualquier objeto serializado, con el fin de detectar modificaciones no autorizadas.
+- Aísle el código que realiza la deserialización, de modo que se ejecute en un entorno con los mínimos privilegios posibles.
+- Registre las excepciones y fallas en la deserialización, tales como cuando el tipo recibido no es el esperado, o la deserialización produce algún tipo de error.
+- Monitoree los procesos de deserialización, alertando si un usuario deserializa constantemente.
+
+## IDEAS CLAVE
+
+<img src="/src/content/blog/p-s-semana-7/imagenes/4_ps.png" alt="drawing" width="720"/>
+
+Explicación: 
+
+La Seguridad informática debe garantizar mantener el control, la integridad, la disponibilidad, la privacidad y la autenticidad de la información manejada en todo momento, y para lograrlo se debe tener en consideración por ejemplo el escaneo constante de vulnerabilidades. Es aquí donde el objetivo del documento top ten de la OWASP cobra gran importancia, al educar a desarrolladores, diseñadores, arquitectos, gerentes y organizaciones sobre lo que puede suceder al tener vulnerabilidades de seguridad, al menos las más usuales en la actualidad en la aplicaciones web.
+
+En esta última semana de aprendizaje revisamos las siguientes vulnerabilidades:
+
+- A5: 2017 Pérdida del control de acceso, la cual indica la importancia de no perder en ningún momento y por ningún usuario el acceso, esto puede permitir que el intruso pueda enviar solicitudes
+- A6: 2017 Configuración de seguridad Incorrecta, que estable el riesgo que se tiene al no configurar el sistema o aplicación con los cuidos necesarios, ya que esto puede dejar puertas traseras para que cualquier intruso acceda a los datos sensibles de la empresa.
+- A7: 2017 Cross-Site Scripting XSS, esta inyección puede incurrir en el robo de información, al secuestrar sesiones de usuarios
+- A8: 2017 Deserialización Insegura, que tiene que ver directamente con la transformación de los datos serializados provenientes de un archivo, flujo o socket de red en un objeto.
+
+Se sugiere que para evitar ser víctima de los riegos mencionados se debe, mantener un antivirus que analice todas las descargas, mantener el sistema operativo y el navegador actualizados y monitoreados, siempre cuidar y actualizar las contraseñas de usuarios teniendo en cuenta la robustez que debe tener, y la depuración de usuarios que ya no estén activos. Se debe confiar en las redes pero sin ser ingenuos y tener especial cuidado en la configuración de cada sistema que se instala.

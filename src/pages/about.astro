@@ -1,0 +1,29 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import Container from '@/components/Container.astro'
+import ProjectCard from '@/components/ProjectCard.astro'
+import { SITE } from '@/consts'
+import Layout from '@/layouts/Layout.astro'
+import { getCollection } from 'astro:content'
+
+const projects = await getCollection('projects')
+---
+
+<Layout title="About" description={SITE.DESCRIPTION}>
+  <Container class="flex flex-col gap-y-6">
+    <Breadcrumbs items={[{ label: 'Sobre', icon: 'lucide:info' }]} />
+
+    <section>
+      <div class="min-w-full">
+        <h1 class="mb-4 text-3xl font-bold">Un poco sobre {SITE.TITLE}</h1>
+        <p class="prose prose-neutral mb-8 dark:prose-invert">
+          {SITE.TITLE}, Soy un entusiasta de la tecnología y la creatividad, y me apasionan los ámbitos del software de audio y video, así como la programación y el diseño de interfaces interactivas. En mis ratos libres, disfruto explorar nuevas tecnologías y experimentar con el mundo del arte digital. Siempre busco aprender y mejorar mis habilidades en estas áreas, y me alegra ayudar a otros a descubrir su potencial en este fascinante campo creativo.
+
+        <!-- <h2 class="mb-4 text-2xl font-semibold">Nuestros proyectos</h2>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project) => <ProjectCard project={project} />)}
+        </div>
+      </div> -->
+    </section>
+  </Container>
+</Layout>

@@ -19,7 +19,7 @@ Según el documento OWASP Top Ten (2017, p 5), los agentes atacantes pueden, pot
 utilizar diferentes rutas o tipos de ataques, aprovechando diversas vulnerabilidades para perjudicar
 la empresa u organización. La siguiente figura muestra las rutas que puede seguir un atacante.
 
-<img src="/src/content/blog/p-s-semana-7/imagenes/1_ps.png" alt="drawing" width="720"/>
+<img src="./p-s-semana-7/1_ps.png" alt="drawing" width="720"/>
 
 > Cada uno de estos caminos representa un riesgo que puede o no ser suficientemente grave
 como para merecer atención y algunas veces, estos caminos son fáciles de encontrar y
@@ -193,7 +193,7 @@ En ambos casos, el atacante malicioso inyecta código sobre algún campo de entr
 
 - **XSS Basados en DOM:** frameworks en JavaScript, aplicaciones de página única o APIs incluyen datos dinámicamente, controlables por un atacante. Idealmente, se debe evitar procesar datos controlables por el atacante en APIs no seguras. 
 
-<img src="/src/content/blog/p-s-semana-7/imagenes/2_ps.png" alt="drawing" width="720"/>
+<img src="./p-s-semana-7/2_ps.png" alt="drawing" width="720"/>
 
 - Los ataques XSS incluyen el robo de la sesión, apropiación de la cuenta, evasión de autentificación de múltiples pasos, reemplazo de nodos DOM, inclusión de troyanos de autentificación, ataques contra el navegador, descarga de software malicioso, keyloggers, entre otros.
 
@@ -213,7 +213,7 @@ El tratamiento de estos datos puede ser:
 Entender la diferencia que existe entre estos distintos métodos es fundamental, ya que se debe adaptar al funcionamiento de la aplicación. Por ejemplo, si tenemos un editor de texto enriquecido, mediante el cual se permite al usuario manipular código HTML, no se debería optar por la opción de escapar los caracteres, ya que al momento de mostrar la información el navegador no lo interpretará y lo mostrará como texto.
 
 Para entender cómo funcionan cada uno de estos métodos, los invitamos a revisar la siguiente imagen:
-<img src="/src/content/blog/p-s-semana-7/imagenes/3_ps.png" alt="drawing" width="720"/>
+<img src="./p-s-semana-7/3_ps.png" alt="drawing" width="720"/>
 
 En el input de ejemplo se puede ver un script javascript, el cual gatilla una alerta en el navegador. Dependiendo el tipo de método que apliquemos sobre los parámetros de entrada, podemos ver el output que deberíamos obtener.
 
@@ -286,7 +286,7 @@ Si esto no es posible, considere alguno de los siguientes puntos:
 
 ## IDEAS CLAVE
 
-<img src="/src/content/blog/p-s-semana-7/imagenes/4_ps.png" alt="drawing" width="720"/>
+<img src="./p-s-semana-7/4_ps.png" alt="drawing" width="720"/>
 
 Explicación: 
 

@@ -1,5 +1,14 @@
 # Programacion y analisis de sistemas
 
+~~~
+npm install
+npm run dev
+~~~
+
+____
+> DEMO
+
+## ESCRITORIO
 
 ![image](https://github.com/user-attachments/assets/76cdce0a-c69d-433b-826f-77f2751dadde)
 

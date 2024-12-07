@@ -40,7 +40,7 @@ def pdf_to_mdx_with_images(pdf_path, output_mdx_path, output_image_dir):
                 mdx_file.write(f"!Imagen {page_num + 1}-{img_index + 1}\n\n")
 
 # Ejemplo de uso
-pdf_path = r"C:\Users\litio\OneDrive - Aiep\AIEP\Aiep Archivos\METODOLOGÍAS DE DESARROLLO DE SOFTWARE\Semana 7\PRO204_s7.pdf"
+pdf_path = r"C:\Users\litio\OneDrive - Aiep\AIEP\Aiep Archivos\Certificado de especialidad I\Semana 3\VF_TAP001_DESCARGABLE_SEMANA_3.pdf"
 output_mdx_path = "output.mdx"
 output_image_dir = "images"
 
